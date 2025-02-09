@@ -134,8 +134,7 @@ class DermaChatBot:
             print(f"Value Error: {ve}")
         except Exception as e:
             print(f" Unexpected Error: {str(e)}")
-        
-        return " An error occurred while fetching data from the database."
+            return " An error occurred while fetching data from the database."
            
                    
               
