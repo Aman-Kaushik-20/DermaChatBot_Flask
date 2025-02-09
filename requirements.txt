@@ -7,4 +7,3 @@ pinecone_text==0.9.0
 pydantic==2.10.6
 ctransformers==0.2.5
 sentence-transformers
-pinecone-client
