@@ -272,12 +272,67 @@ Example initialization route:
 @app.route("/initialize", methods=["POST"])
 def initialize_bot():
     global DermaBot
+    
     data = request.get_json()
     openai_key = data.get("openai_key")
     pinecone_key = data.get("pinecone_key")
-    DermaBot = DermaChatBot(openai_key, pinecone_key, "medicalchatbothybrid", "hybrid_namespace", "hybrid_namespace_ayurved")
+    index_name = data.get("index_name", "medicalchatbothybrid")
+    namespace = data.get("namespace", "hybrid_namespace")
+    namespace_2 = data.get("namespace_2", "hybrid_namespace_ayurved")
+
+    # Validate required parameters
+    if not openai_key or not pinecone_key:
+        return jsonify({"error": "Missing required API keys!"}), 400
+
+    # Initialize DermaChatBot
+    DermaBot = DermaChatBot(openai_key, pinecone_key, index_name, namespace, namespace_2)
+
     return jsonify({"message": "✅ DermaChatBot initialized successfully!"})
-```
+
+@app.route("/start_convo", methods=["GET"])
+def start_conversation():
+    global DermaBot
+    
+    if DermaBot is None:
+        return jsonify({"error": "❌ DermaChatBot is not initialized. Call /initialize first!"}), 400
+    
+    # Start the conversation and return the first response
+    return jsonify({"response": DermaBot.start_convo()})
+
+
+@app.route("/continue_convo", methods=["POST"])
+def continue_conversation():
+    """Continue the chatbot conversation by passing a user query."""
+    global DermaBot
+    
+    if DermaBot is None:
+        return jsonify({"error": "❌ DermaChatBot is not initialized. Call /initialize first!"}), 400
+    
+    data = request.get_json()
+    input_query = data.get("query")
+
+    if not input_query:
+        return jsonify({"error": "Missing input query!"}), 400
+
+    # Call the chatbot function to process the query
+    response = DermaBot.checkpoint_check(input_query)
+
+    return jsonify({"response": response})
+
+
+@app.route("/get_history", methods=["GET"])
+def get_history():
+    """Return the conversation history of the chatbot."""
+    global DermaBot
+    
+    if DermaBot is None:
+        return jsonify({"error": "❌ DermaChatBot is not initialized. Call /initialize first!"}), 400
+
+    return jsonify({"conversation_history": DermaBot.convo_history})
+
+
+if __name__=="__main__":
+    app.run(host="0.0.0.0", port=10000)```
 
 ---
 
