@@ -1,4 +1,7 @@
 # DermAI: Integrated Dermatology Assistant System
+
+https://github.com/user-attachments/assets/2f731744-4b4a-4a36-aa9a-06a3a7d5210f
+
 ![image](https://github.com/user-attachments/assets/2151c4b1-d733-4f4d-929d-de1b03d082fe)
 
 ## Table of Contents
